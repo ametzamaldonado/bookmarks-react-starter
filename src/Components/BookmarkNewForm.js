@@ -1,4 +1,10 @@
-import { useState } from "react";
+import { useState, useNavigate } from "react";
+import axios from "axios"; 
+import { useNavigate } from "react-router-dom";
+
+// POST PAGE!!!!
+
+const API = process.env.REACT_APP_API_URL
 
 function BookmarkNewForm() {
   const [bookmark, setBookmark] = useState({
@@ -9,6 +15,19 @@ function BookmarkNewForm() {
     description: "",
   });
 
+  const navigate = useNavigate();
+
+  const addBookmark = () => {
+    axios.post(`${API}/bookmarks`, bookmark)
+      .then (() => navigate("/bookmarks")) // happy path! only happens if above request worked
+      .catch((err) => console.log(err)) // bad path! happens when our request fails!
+  }
+  /* 
+  We need a function to SEND our DATA to the DATABASE
+    1. Get a handle on our data
+    2. Send a POST request to our DB
+    3. < What happens after we succeed? >
+  */
   const handleTextChange = (event) => {
     setBookmark({ ...bookmark, [event.target.id]: event.target.value });
   };
@@ -19,6 +38,7 @@ function BookmarkNewForm() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    addBookmark();
   };
   return (
     <div className="New">
